@@ -15,7 +15,10 @@ def get(args=None):
 
 		# on template apply doclist values
 
-	html = build_html(args, 'page.html')
+	template = get_print_format(args.get('fmtname'))
+	args = get_args(args)
+	
+	html = build_html(args, template)
 
 	return html
 
@@ -30,5 +33,22 @@ def build_html(args, template):
 	#return ''
 	from jinja2 import Environment, FileSystemLoader
 	jenv = Environment(loader = FileSystemLoader(path))
-	html = jenv.get_template(template).render(args)
+	template = jenv.from_string(template)
+	html = template.render(args)
 	return html
+
+def get_print_format(format_name):
+	import webnotes
+	res = webnotes.conn.sql("""\
+		select html from `tabPrint Format`
+		where name=%s and ifnull(is_template)=1""", format_name)
+	return res and res[0][0] or ''
+	
+def get_args(args):
+	if not(args.get('doctype') and args.get('name')):
+		return args
+	import webnotes
+	from webnotes.model.doclist import DocList
+	dl = DocList(args.get('doctype'), args.get('name'))
+	args.update(dl.fields)
+	return args
