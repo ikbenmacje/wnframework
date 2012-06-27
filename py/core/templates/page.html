@@ -1,0 +1,20 @@
+{% extends "outer.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block header %}
+	{{ super() }}
+
+	{% block css %}
+	{% if insert_style %}
+
+	<style>{{ css }}</style>
+
+	{% endif %}
+	{% endblock %}
+
+{% endblock %}
+
+{% block content %}
+	<div>{{ content }}</div>
+{% endblock %}

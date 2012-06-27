@@ -113,66 +113,82 @@ $.extend(_p, {
 			+ only_body
 	*/
 	build: function(fmtname, onload, no_letterhead, only_body) {
-		args = {
-			fmtname: fmtname,
-			onload: onload,
-			no_letterhead: no_letterhead,
-			only_body: only_body
-		};
-	
 		if(!cur_frm) {
 			alert('No Document Selected');
 			return;
 		}
-				
-		// Get current doc (record)
-		var doc = locals[cur_frm.doctype][cur_frm.docname];
-		if(args.fmtname == 'Standard') {
-			/*
-				Render standard print layout
-				The function passed as args onload is then called using these parameters
-			*/
-			args.onload(_p.render({
-				body: _p.print_std(args.no_letterhead),
-				style: _p.print_style,
-				doc: doc,
-				title: doc.name,
-				no_letterhead: args.no_letterhead,
-				only_body: args.only_body
-			}));
-		} else {			
-			if (!_p.formats[args.fmtname]) {
-				/*
-					If print formats are not loaded, then load them and call the args onload function on callback.
-					I think, this case happens when preview is invoked directly
-				*/
-				var build_args = args;
-				$c(
-					command = 'webnotes.widgets.form.print_format.get',
-					args = { 'name': build_args.fmtname	},
-					fn = function(r, rt) {
-						_p.formats[build_args.fmtname] = r.message;
-						build_args.onload(_p.render({
-							body: _p.formats[build_args.fmtname],
-							style: '',
-							doc: doc,
-							title: doc.name,
-							no_letterhead: build_args.no_letterhead,
-							only_body: build_args.only_body
-						}));						
-					}
-				);			
-			} else {
-				// If print format is already loaded, go ahead with args onload function call
+
+		if (locals['Print Format'][fmtname] && cint(locals['Print Format'][fmtname].is_template)) {
+			var args = {
+				fmtname: fmtname,
+				doctype: cur_frm.doc.doctype,
+				name: cur_frm.doc.name
+			};
+			wn.call({
+				method: 'webnotes.utils.print.get',
+				args: args,
+				callback: function(r) {
+					console.log(r);
+					onload(r.message);
+				},
+			});
+		} else {
+			var args = {
+				fmtname: fmtname,
+				onload: onload,
+				no_letterhead: no_letterhead,
+				only_body: only_body,
+			};
+		
+			// Get current doc (record)
+			var doc = locals[cur_frm.doctype][cur_frm.docname];
+			if(args.fmtname == 'Standard') {
+			
+				//	Render standard print layout
+				//	The function passed as args onload is then called using these parameters
+			
 				args.onload(_p.render({
-					body: _p.formats[args.fmtname],
-					style: '',
+					body: _p.print_std(args.no_letterhead),
+					style: _p.print_style,
 					doc: doc,
 					title: doc.name,
 					no_letterhead: args.no_letterhead,
 					only_body: args.only_body
-				}));			
-			}		
+				}));
+			} else {			
+				if (!_p.formats[args.fmtname]) {
+				
+					//	If print formats are not loaded, then load them and call the args onload function on callback.
+					//	I think, this case happens when preview is invoked directly
+				
+					var build_args = args;
+					$c(
+						command = 'webnotes.widgets.form.print_format.get',
+						args = { 'name': build_args.fmtname	},
+						fn = function(r, rt) {
+							_p.formats[build_args.fmtname] = r.message;
+							build_args.onload(_p.render({
+								body: _p.formats[build_args.fmtname],
+								style: '',
+								doc: doc,
+								title: doc.name,
+								no_letterhead: build_args.no_letterhead,
+								only_body: build_args.only_body
+							}));						
+						}
+					);			
+				} else {
+					// If print format is already loaded, go ahead with args onload function call
+					args.onload(_p.render({
+						body: _p.formats[args.fmtname],
+						style: '',
+						doc: doc,
+						title: doc.name,
+						no_letterhead: args.no_letterhead,
+						only_body: args.only_body
+					}));			
+				}		
+			}
 		}
 	},
 	
