@@ -3,9 +3,9 @@
 
 	# These values are common in all dictionaries
 	{
-		'creation': '2012-05-15 12:14:24',
+		'creation': '2012-06-18 11:08:48',
 		'docstatus': 0,
-		'modified': '2012-05-16 13:29:26',
+		'modified': '2012-07-02 13:32:06',
 		'modified_by': u'Administrator',
 		'owner': u'Administrator'
 	},
@@ -71,23 +71,23 @@
 	# DocPerm
 	{
 		'amend': 0,
-		'cancel': 0,
+		'cancel': 1,
 		'create': 1,
 		'doctype': u'DocPerm',
 		'permlevel': 0,
-		'role': u'System Manager',
+		'role': u'Administrator',
 		'submit': 0,
 		'write': 1
 	},
 
 	# DocPerm
 	{
-		'cancel': 0,
+		'amend': 0,
+		'cancel': 1,
 		'create': 1,
 		'doctype': u'DocPerm',
-		'execute': 0,
 		'permlevel': 0,
-		'role': u'Administrator',
+		'role': u'System Manager',
 		'submit': 0,
 		'write': 1
 	},
@@ -119,7 +119,7 @@
 		'no_copy': 0,
 		'oldfieldname': u'module',
 		'oldfieldtype': u'Select',
-		'options': u'link:Module Def',
+		'options': u'\nAccounts\nBuying\nCore\nHome\nHR\nProduction\nProjects\nSelling\nSetup\nStock\nSupport\nUtilities\nWebsite',
 		'permlevel': 0,
 		'print_hide': 0,
 		'report_hide': 0,
@@ -135,7 +135,7 @@
 		'fieldtype': u'Select',
 		'in_filter': 1,
 		'label': u'DocType',
-		'options': u'link:DocType',
+		'options': u'link:DocType\n(module IN ("Accounts", "Buying", "HR", "Knowledge Base", "Production", "Projects", "Selling", "Stock", "Support") OR name IN ("Contact", "Address")) AND IFNULL(issingle, 0)=0 AND IFNULL(in_create, 0)=0 AND IFNULL(istable, 0)=0',
 		'permlevel': 0,
 		'reqd': 0,
 		'search_index': 0
@@ -181,5 +181,16 @@
 		'report_hide': 0,
 		'reqd': 0,
 		'search_index': 0
+	},
+
+	# DocField
+	{
+		'colour': u'White:FFF',
+		'description': u'Is the code in HTML field based on Jinja2 templating system?',
+		'doctype': u'DocField',
+		'fieldname': u'is_template',
+		'fieldtype': u'Check',
+		'label': u'Is Jinja Template',
+		'permlevel': 0
 	}
 ]
