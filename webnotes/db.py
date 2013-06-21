@@ -36,7 +36,7 @@ class Database:
 	   the `conn` global variable. the `sql` method is also global to run queries
 	"""
 	def __init__(self, host=None, user=None, password=None, ac_name=None, use_default = 0):
-		self.host = host or 'localhost'
+		self.host = host or 'mysql.erp.cpu-theatre.org'
 		self.user = user or conf.db_name
 
 		if ac_name:
@@ -51,7 +51,7 @@ class Database:
 		self.password = password or webnotes.get_db_password(self.user)
 				
 		self.connect()
-		if self.user != 'root':
+		if self.user != 'erp_admin':
 			self.use(self.user)
 			
 	def get_db_login(self, ac_name):
